@@ -27,7 +27,6 @@ namespace WcfExample.ClientBase.Extensions
         /// Получить удаленный сервис
         /// </summary>
         /// <typeparam name="TContract"></typeparam>
-        /// <param name="services"></param>
         public static TContract GetRemoteService<TContract>(this IServiceCollection services)
         {
             if(!(Activator.CreateInstance(WcfCommunication.WcfProtocolType) is Binding protocolInstance))
@@ -38,7 +37,7 @@ namespace WcfExample.ClientBase.Extensions
                 var factory = new ChannelFactory<TContract>(protocolInstance, new EndpointAddress($"{WcfCommunication.WcfConnectionString}/{typeof(TContract).Name}"));
                 return factory.CreateChannel();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new InvalidOperationException(
                     $"Сервис {typeof(TContract)} не найден в удаленном хранилище");
