@@ -9,7 +9,7 @@ namespace WcfExample.ClientBase.Extensions
     public static class ClientServiceCollectionExtension
     {
         /// <summary>
-        /// Получить сервис из сервисной коллекции
+        /// Получить локальный сервис из сервисной коллекции
         /// </summary>
         /// <typeparam name="TContract"></typeparam>
         /// <param name="services"></param>

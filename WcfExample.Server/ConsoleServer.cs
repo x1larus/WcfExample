@@ -1,7 +1,5 @@
 ﻿using System;
-using WcfExample.Contracts;
-using WcfExample.ServerBase.Extensions;
-using WcfExample.ServerBase.OnStartup;
+using WcfExample.Server.OnStartup;
 
 namespace WcfExample.Server
 {
@@ -9,6 +7,8 @@ namespace WcfExample.Server
     {
         static void Main(string[] args)
         {
+            // Дабы вкурить аче это такое стоит почитать про DependencyInjection
+            // https://metanit.com/sharp/dotnet/1.1.php
             var services = ServerServiceCollectionBuilder.BuildServiceCollection();
             Console.ReadKey();
         }

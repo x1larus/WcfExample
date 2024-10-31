@@ -3,6 +3,9 @@ using System.ServiceModel;
 
 namespace WcfExample.Const
 {
+    /// <summary>
+    /// Описание WCF-коммуникаций
+    /// </summary>
     public static class WcfCommunication
     {
         private const string WcfProtocol = "net.tcp";

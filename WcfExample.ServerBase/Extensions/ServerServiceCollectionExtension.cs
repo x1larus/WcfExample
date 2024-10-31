@@ -10,7 +10,8 @@ namespace WcfExample.ServerBase.Extensions
     public static class ServerServiceCollectionExtension
     {
         /// <summary>
-        /// Добавить публикуемый сервис
+        /// Добавить публикуемый сервис.
+        /// Сервис добавляется в локальную сервисную коллекцию и публикуется
         /// </summary>
         /// <typeparam name="TContract">Контракт сервиса</typeparam>
         /// <typeparam name="TService">Реализация сервиса</typeparam>
@@ -24,14 +25,29 @@ namespace WcfExample.ServerBase.Extensions
                 throw new InvalidOperationException($"Сервис {serviceType} не реализует контракт {contractType}");
 
             if (contractType.CustomAttributes.FirstOrDefault(el => el.AttributeType == typeof(ServiceContractAttribute)) == null)
-                throw new InvalidOperationException($"Сервис {contractType} не помечен как WCF-контракт");
+                throw new InvalidOperationException($"Контракт {contractType} не помечен как WCF-контракт");
 
-            services.Add(new ServiceDescriptor(contractType, serviceType, ServiceLifetime.Transient));
 
             if (!(Activator.CreateInstance(WcfCommunication.WcfProtocolType) is Binding protocolInstance))
                 throw new InvalidOperationException($"Указанный протокол {WcfCommunication.WcfProtocolType.Name} не реализует Binding");
 
-            var host = new ServiceHost(typeof(TService), new Uri($"{WcfCommunication.WcfConnectionString}/{contractType.Name}"));
+            object serviceObj;
+
+            try
+            {
+                serviceObj = Activator.CreateInstance(serviceType, services);
+            }
+            catch (Exception)
+            {
+                throw new InvalidOperationException($"Реализация сервиса {serviceType} не имеет контруктора с параметрами IServiceCollection");
+            }
+
+            if (!(serviceObj is TService serviceInstance))
+                throw new InvalidOperationException($"Не удалось создать экземпляр сервиса {serviceType}");
+
+            services.Add(new ServiceDescriptor(contractType, serviceInstance));
+
+            var host = new ServiceHost(serviceInstance, new Uri($"{WcfCommunication.WcfConnectionString}/{contractType.Name}"));
 
             host.AddServiceEndpoint(typeof(TContract), protocolInstance, "");
             host.Open();

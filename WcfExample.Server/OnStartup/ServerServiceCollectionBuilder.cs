@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using WcfExample.Contracts;
 using WcfExample.ServerBase.Extensions;
+using WcfExample.ServerBase.Logger;
 using WcfExample.Services;
 
-namespace WcfExample.ServerBase.OnStartup
+namespace WcfExample.Server.OnStartup
 {
     /// <summary>
     /// Сборщик сервисной коллекции
@@ -25,6 +26,7 @@ namespace WcfExample.ServerBase.OnStartup
         /// <param name="services"></param>
         private static void RegisterLocalServices(IServiceCollection services)
         {
+            services.AddSingleton<IServerLogger, ConsoleLogger>();
         }
 
         /// <summary>
@@ -36,9 +38,10 @@ namespace WcfExample.ServerBase.OnStartup
         {
             var serviceCollection = new ServiceCollection();
 
-            RegiserHostedServices(serviceCollection);
             RegisterLocalServices(serviceCollection);
-
+            RegiserHostedServices(serviceCollection);
+            
+            serviceCollection.MakeReadOnly();
             return serviceCollection;
         }
     }

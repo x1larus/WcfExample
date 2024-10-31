@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WcfExample.Const\WcfExample.Const.csproj" />
     <ProjectReference Include="..\WcfExample.Contracts\WcfExample.Contracts.csproj" />
+    <ProjectReference Include="..\WcfExample.Shared\WcfExample.Shared.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
